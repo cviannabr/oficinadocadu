@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Authorization Callback — Oficina do Cadu</title>
+<style>
+  body{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;line-height:1.6;
+       max-width:640px;margin:48px auto;padding:0 18px;color:#1a1a1a;text-align:center}
+  h1{font-size:1.4rem}
+  .box{margin:18px 0;padding:14px;border:1px solid #ccc;border-radius:8px;
+       background:#f7f7f7;word-break:break-all;font-family:monospace;font-size:.95rem}
+  button{font-size:1rem;padding:10px 18px;border:0;border-radius:8px;
+         background:#2557d6;color:#fff;cursor:pointer}
+  button:active{background:#1c44a8}
+  .err{color:#b00020} .ok{color:#157a3a}
+  .muted{color:#666;font-size:.9rem}
+</style>
+</head>
+<body>
+<h1>🛠️ Oficina do Cadu — Authorization</h1>
+<div id="content"><p class="muted">Lendo o resultado da autorização…</p></div>
+<script>
+  var q = new URLSearchParams(window.location.search);
+  var code = q.get("code");
+  var err = q.get("error") || q.get("error_description");
+  var state = q.get("state");
+  var c = document.getElementById("content");
+  if (code) {
+    c.innerHTML =
+      '<p class="ok">Autorização concedida! Copie o código abaixo e cole no terminal onde o script está rodando:</p>' +
+      '<div class="box" id="code">' + code + '</div>' +
+      '<button onclick="navigator.clipboard.writeText(document.getElementById(\'code\').innerText).then(function(){this.innerText=\'Copiado!\'}.bind(this))">Copiar código</button>' +
+      (state ? '<p class="muted">state: ' + state + '</p>' : '');
+  } else if (err) {
+    c.innerHTML = '<p class="err">Erro na autorização: ' + err + '</p>' +
+                  '<p class="muted">Feche e tente novamente.</p>';
+  } else {
+    c.innerHTML = '<p class="muted">Nenhum código recebido. Esta página é o destino do login do TikTok; ' +
+                  'abra-a a partir do fluxo de autorização.</p>';
+  }
+</script>
+</body>
+</html>
